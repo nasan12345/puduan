@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+<link rel="preload" as="image" href="images/splash_bg.png">
+<link rel="preload" as="image" href="images/phase1_chuyu.png">
+<title>蒲团·成长21课</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{width:100%;height:100%;overflow:hidden;font-family:"PingFang SC","Microsoft YaHei",sans-serif;background:#0f0c18;color:#fff;user-select:none;-webkit-user-select:none}
+.phone{max-width:430px;width:100%;height:100%;margin:0 auto;position:relative;overflow:hidden;background:#1a142a}
+.scr{position:absolute;top:0;left:0;width:100%;height:100%;display:none;overflow:hidden}
+.scr.on{display:block}
+button{cursor:pointer;border:none;outline:none;font-family:inherit;-webkit-tap-highlight-color:transparent}
+img{-webkit-transform:translateZ(0)}.splash-bg{background-color:#1a142a}.loader{background:linear-gradient(90deg,rgba(255,255,255,.03) 0%,rgba(255,255,255,.06) 50%,rgba(255,255,255,.03) 100%);background-size:200% 100%;animation:shimmer 1.5s infinite}@keyframes shimmer{0%{background-position:-200% 0}100%{background-position:200% 0}}
+</style>
+</head>
+<body>
+<div class="phone">
+
+<div id="spl" class="scr on" style="background:url('images/splash_bg.png') center/cover no-repeat">
+  <div style="position:absolute;inset:0;background:linear-gradient(to bottom,transparent 55%,rgba(15,12,24,.8) 100%)"></div>
+  <button onclick="enter()" style="position:absolute;left:50%;top:40%;transform:translateX(-50%);width:70%;height:56px;border-radius:50px;border:none;background:#6a4088;color:#fff;font-size:clamp(18px,5vw,28px);font-weight:600;letter-spacing:6px;z-index:2">开始成长</button>
+</div>
+
+<div id="hom" class="scr" style="background:#1a142a">
+  <div id="heroBg" style="position:absolute;top:0;left:0;width:100%;height:51%;background-size:contain;background-position:center;background-repeat:no-repeat"></div>
+  <div style="position:absolute;bottom:0;left:0;right:0;top:49%;background:linear-gradient(to bottom,transparent,#1a142a 8%);padding:20px 28px 16px;display:flex;flex-direction:column;justify-content:flex-end">
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px"><span id="phaseDot" style="width:10px;height:10px;border-radius:50%"></span><span id="phaseTag" style="font-size:12px;letter-spacing:3px"></span></div>
+    <div id="greetTxt" style="font-size:clamp(22px,7vw,34px);font-weight:700;letter-spacing:3px"></div>
+    <div id="greetSub" style="font-size:clamp(12px,3.5vw,15px);color:rgba(255,255,255,.35);margin-top:4px"></div>
+    <div style="display:flex;align-items:center;gap:12px;margin-top:18px"><div style="flex:1;height:6px;background:rgba(255,255,255,.08);border-radius:3px"><div id="hpFill" style="height:100%;background:linear-gradient(90deg,#b8a8c8,#c4b0d8);border-radius:3px;width:0;transition:width .5s"></div></div><span id="hpNum" style="font-size:13px;color:rgba(255,255,255,.35)">0/21</span></div>
+    <div id="streakInfo" style="font-size:12px;color:#c4b0d8;margin-top:8px"></div>
+    <div style="display:flex;flex-direction:column;gap:8px;margin-top:16px;padding-bottom:10px">
+      <button id="btnCont" onclick="goContinue()" style="padding:14px 0;border-radius:50px;font-size:clamp(14px,4vw,17px);font-weight:600;letter-spacing:4px;background:#6a4088;color:#fff">开始成长</button>
+      <button onclick="goLevels()" style="padding:12px 0;border-radius:50px;font-size:clamp(13px,3.5vw,15px);font-weight:500;letter-spacing:3px;border:1px solid rgba(255,255,255,.15);background:transparent;color:#fff">所有关卡</button>
+      <button onclick="goReset()" style="padding:8px 0;font-size:11px;letter-spacing:2px;background:transparent;color:rgba(255,255,255,.2)">重新开始</button><button onclick="goResult()" style="padding:8px 0;font-size:11px;letter-spacing:2px;background:transparent;color:rgba(255,255,255,.15);margin-top:4px">真实的自己</button>
+    </div>
+  </div>
+</div>
+
+<div id="lvl" class="scr" style="background:#1a142a">
+  <div style="position:absolute;top:0;left:0;right:0;height:56px;display:flex;align-items:center;padding:0 20px;gap:12px;background:rgba(26,20,42,.95);z-index:2">
+    <button onclick="goLevelsBack()" style="width:36px;height:36px;border-radius:50%;border:1px solid rgba(255,255,255,.2);background:transparent;color:#fff;font-size:16px">←</button>
+    <span style="font-size:17px;font-weight:500;letter-spacing:4px">成长21课</span>
+    <span id="lvMeta" style="margin-left:auto;font-size:14px;color:rgba(255,255,255,.35)">0/21</span>
+  </div>
+  <div id="lvGrid" style="position:absolute;top:66px;left:0;right:0;bottom:0;padding:10px 16px 20px;overflow-y:auto;display:grid;grid-template-columns:repeat(3,1fr);gap:10px;align-content:start"></div>
+</div>
+
+<div id="ply" class="scr" style="background:#1a142a">
+  <div style="position:absolute;top:0;left:0;right:0;height:52px;display:flex;align-items:center;padding:0 16px;gap:10px;background:#1a142a;z-index:5;border-bottom:1px solid rgba(255,255,255,.06)">
+    <button onclick="goPlayBack()" style="width:34px;height:34px;border-radius:50%;border:1px solid rgba(255,255,255,.2);background:transparent;color:#fff;font-size:15px">←</button>
+    <span id="playTtl" style="font-size:16px;font-weight:500">第1关</span>
+    <span id="playSteps" style="margin-left:auto;display:flex;gap:5px"></span>
+  </div>
+  <div id="playBody" style="position:absolute;top:52px;left:0;right:0;bottom:68px;overflow:hidden"></div>
+  <div style="position:absolute;bottom:0;left:0;right:0;height:50px;display:flex;align-items:center;gap:12px;padding:0 16px;background:#1a142a;z-index:5;border-top:1px solid rgba(255,255,255,.06)">
+    <button id="navPrev" onclick="prevStep()" style="flex:1;height:30px;border-radius:50px;border:1px solid rgba(255,255,255,.15);background:transparent;color:#fff;font-size:12px;font-weight:500;letter-spacing:3px">上一步</button>
+    <button id="navNext" onclick="nextStep()" style="flex:1;height:30px;border-radius:50px;border:none;background:linear-gradient(135deg,#8a60a8,#b8a8c8);color:#fff;font-size:12px;font-weight:500;letter-spacing:3px">下一步</button>
+  </div>
+</div>
+
+<div id="ov" style="position:absolute;top:0;left:0;width:100%;height:100%;z-index:10;background:rgba(26,20,42,.94);display:none;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:30px">
+  <img id="cmplImg" src="" style="width:120px;height:120px;border-radius:20px;object-fit:cover;margin-bottom:20px">
+  <div style="font-size:28px;color:#c4b0d8;letter-spacing:5px;font-weight:600">嗯，过了。</div>
+  <div id="cmplSub" style="font-size:15px;color:rgba(255,255,255,.35);margin:6px 0"></div>
+  <div id="cmplQuote" style="font-size:14px;color:rgba(255,255,255,.45);max-width:280px;margin-bottom:24px;line-height:1.5"></div>
+  <button onclick="goComplete()" style="padding:14px 50px;border-radius:50px;font-size:16px;font-weight:600;letter-spacing:3px;background:linear-gradient(135deg,#8a60a8,#b8a8c8);color:#fff">返回首页</button>
+</div>
+
+</div>
+<script src="data.js"></script>
+<script src="app_final.js"></script>
+</body>
+</html>
